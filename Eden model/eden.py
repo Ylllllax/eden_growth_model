@@ -13,12 +13,15 @@ sq = np.zeros((n, n))
 sq[10][5] = 1
 
 "Note: the array is padded with tens to form a boundary which avoids out of range errors in the next neighbour function below"
+"This seems to be the quickest method for now. Tried throwing exceptions for nearest boundary values but it has to check for each point so is slower"
 
-sq = np.insert(sq, n, values=10, axis=1)
-sq = np.insert(sq, 0, values=10, axis=1)
+"Further optimisation can be done on removing redundant squares so they don't have to be looped over"
 
-sq = np.insert(sq, n, values=10, axis=0)
-sq = np.insert(sq, 0, values=10, axis=0)
+sq = np.insert(sq, n, values=10, axis=1)  # right side of array
+sq = np.insert(sq, 0, values=10, axis=1)  # left side of array
+
+sq = np.insert(sq, n, values=10, axis=0)  # top side of array (bottom after inverted)
+sq = np.insert(sq, 0, values=10, axis=0)  # bottom side of array
 
 # FN =======================================================================================
 
@@ -47,11 +50,11 @@ def eden_b_step(array):
                     list_var.append([i-1, j-1])
     print list_var
 
-    __t = tuple(random.choice(list_var)) #convert list to tuple
+    __t = random.choice(list_var) # can convert list to tuple with tuple()
+
+    print __t
 
 """"This doesn't work yet: I need to change the tuple into coordinates such that the function can get the coordinates in the array sq. Then I just change that value of sq to 1 to fill up and complete the Eden B step"""
-
-    print list_var[__t[0], __t[1]]
 
 
 eden_b_step(sq)
