@@ -9,6 +9,7 @@ import numpy as np
 import pprint
 import random
 import matplotlib.pyplot as plt
+import time
 import matplotlib.image as mpimg
 
 # INIT =====================================================================================
@@ -55,17 +56,30 @@ def eden_b_step(array):
                     list_var.append([i+1, j])
                 if array[i-1][j] == 0:
                     list_var.append([i-1, j])
-    print list_var
+#    print list_var
 
     __t = tuple(random.choice(list_var))  # convert to tuple so it can be used as array coordinate values
-    print __t
+#    print __t
     sq[__t] = 1
+
+"RUNNING AND TIMING"
+
+start = time.time()
 
 for i in range(2000):
     eden_b_step(sq)
+
+end = time.time()
+print (end - start)  # execution time in seconds. Put this before the plot, because otherwise it will time the time until you close the graph window
+
+"END RUNNING AND TIMING"
 
 plot = plt.imshow(sq, cmap='hot')
 plt.gca().invert_yaxis()
 pprint.pprint(sq)
 plt.show()
 
+"Timing results"
+
+"27.11.16 push 1 = 21.2969999313s, 21.1749999523s, 20.5299999714s. This is for 101x101, print enabled, 2000 steps"
+"27.11.16 push 1 = 12.478000164s, 12.246999979s, 12.0499999523s. This is for 101x101, print disabled, 2000 steps"
