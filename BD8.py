@@ -264,10 +264,13 @@ class IterationTracker:
          
         
     
+def runTest():
+    start = time.time()
 
-        
-        
-        
-    
-            
-        
+    b = DataAnalysis()
+    b.log_log_origin(10, 17, 20, 1000)
+
+    end = time.time()
+    print (end - start)  # execution time in seconds. Put this before the plot, because otherwise it will time the time until you close the graph window
+
+runTest()
