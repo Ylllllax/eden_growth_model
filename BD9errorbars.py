@@ -218,7 +218,7 @@ class DataAnalysis:
             log_upper=np.log(upper_error)
             log_lower=np.log(lower_error)
             print log_w, log_upper, log_lower
-            np.savetxt('%g.txt' % other.size_of_system(), np.transpose([log_t,log_w]))
+            np.savetxt('%g.txt' % other.size_of_system(), np.transpose([log_t, log_w, log_upper, log_lower]))
             m=m+1
             other.reset_system(L_min+m*500) #increasing system by 500 each time
         end = np.datetime64(datetime.datetime.now())
