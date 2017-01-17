@@ -273,13 +273,16 @@ class IterationTracker:
         
     def display(self, other):        
         print "%s %g, %s %g %s %g, %s %g %s %g" % ("system size =", other.size_of_system(), "simulation number", self.__simulation_number, "out of", self.__total_simulations, "data point",self.__data_point_number, "out of", self.__total_data_points )      
-         
-        
-    
 
-        
-        
-        
-    
-            
-        
+
+def runTest():
+    start = time.time()
+
+    b = DataAnalysis()
+    b.log_log_origin(11, 16, 20, 500, 5)
+
+    end = time.time()
+    print (end - start)  # execution time in seconds. Put this before the plot, because otherwise it will time the time until you close the graph window
+
+runTest()
+
