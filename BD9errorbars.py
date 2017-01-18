@@ -283,6 +283,7 @@ def runTest():
 
     end = time.time()
     print (end - start)  # execution time in seconds. Put this before the plot, because otherwise it will time the time until you close the graph window
+    # runtime 25.7776975001 hours, 17 jan 2017
 
 runTest()
 
