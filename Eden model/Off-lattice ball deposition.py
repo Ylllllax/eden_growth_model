@@ -2,10 +2,10 @@ import pygame
 import random
 import math
 
-background_colour = (255,255,255)
+background_colour = (255, 255, 255)
 (width, height) = (800, 800)
 
-elasticity = 0    # 0 means balls stick
+elasticity = 0    # 0 means balls stick i.e. what percentage of speed is retained on bounce
 
 
 def addVectors((angle1, length1), (angle2, length2)):
@@ -46,7 +46,7 @@ class Particle():
         self.x = x
         self.y = y
         self.size = size
-        self.colour = (0, 0, 255)
+        self.colour = (102, 0, 255)    # a beautiful purple
         self.thickness = 0
         self.speed = 0
         self.angle = 0
