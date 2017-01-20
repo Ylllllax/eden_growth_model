@@ -154,4 +154,14 @@ class IterationTracker:
         print "%s %g, %s %g %s %g, %s %g %s %g" % ("system size =", other.system_size(), "simulation number", self.__simulation_number, "out of", self.__total_simulations, "data point",self.__data_point_number, "out of", self.__total_data_points )      
          
         
-    
+def test():
+    start = time.time()
+
+    b = DataAnalysis()
+    a = EdenCsystem(1000)
+    b.log_log_origin(a, 4, 15, 10, 4)
+
+    end = time.time()
+    print (end - start)
+
+test()
