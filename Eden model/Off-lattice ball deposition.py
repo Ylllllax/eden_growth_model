@@ -6,6 +6,13 @@ import time
 background_colour = (255, 255, 255)
 (width, height) = (800, 800)
 mass_of_air = 0
+gravity = (math.pi, 0.01)
+
+# just loop things
+counter = 0
+off = 0
+
+my_particles_frozen = []
 
 elasticity = 0    # 0 means balls stick i.e. what percentage of speed is retained on bounce
 
@@ -27,11 +34,11 @@ def findParticle(particles, x, y):
     return None
 
 
-def newParticle(delay):
+def newParticle():
     size = random.randint(10, 20)
     density = random.randint(1, 20)
     x = random.randint(size, width - size)
-    y = random.randint(size, height - size)
+    y = random.randint(size, size+1)
 
     particle = Particle((x, y), size, density * size ** 2)
     particle.colour = (200 - density * 10, 200 - density * 10, 255)
@@ -40,8 +47,22 @@ def newParticle(delay):
 
     my_particles.append(particle)
 
-    if delay is True:
-        time.sleep(1)
+
+def newParticleRow():
+    size = 15
+    density = 1
+    y = 1
+    dummy = 0
+
+    for x in range(width):
+        dummy = dummy + 1
+        if dummy%30 == 0:
+            particle = Particle((x, y), size, density * size ** 2)
+            particle.colour = (200 - density * 10, 200 - density * 10, 255)
+            particle.speed = 0
+            particle.angle = 0
+
+            my_particles.append(particle)
 
 
 def collide(p1, p2):
@@ -77,13 +98,13 @@ class Particle():
         self.speed = 0
         self.angle = 0
         self.mass = mass
-        self.drag = (self.mass/(self.mass + mass_of_air)) ** self.size
+        #self.drag = (self.mass/(self.mass + mass_of_air)) ** self.size
 
     def display(self):
         pygame.draw.circle(screen, self.colour, (int(self.x), int(self.y)), self.size, self.thickness)
 
     def move(self):
-        #(self.angle, self.speed) = addVectors((self.angle, self.speed), gravity)
+        (self.angle, self.speed) = addVectors((self.angle, self.speed), gravity)
         self.x += math.sin(self.angle) * self.speed
         self.y -= math.cos(self.angle) * self.speed
         #self.speed *= self.drag
@@ -112,40 +133,57 @@ class Particle():
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Eden deposition off-lattice')
 
-number_of_particles = 10
+number_of_particles = 40
 my_particles = []
 
 for n in range(number_of_particles):
-    newParticle(0)
+    newParticle()
 
 selected_particle = None
 running = True
 
 while running:
 
-    newParticle(0)
+    counter = counter + 1
+    off = off + 1
+
+    # if counter % 10 == 0:
+        # newParticle()
+    if counter == 1000:
+        newParticleRow()
+        off = 0
+        if counter == 1500:
+            for i in my_particles:
+                my_particles_frozen.append(i)
+                my_particles.remove(i)
+                counter = 0
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            (mouseX, mouseY) = pygame.mouse.get_pos()
-            selected_particle = findParticle(my_particles, mouseX, mouseY)
-        elif event.type == pygame.MOUSEBUTTONUP:
-            selected_particle = None
+        # elif event.type == pygame.MOUSEBUTTONDOWN:
+        #     (mouseX, mouseY) = pygame.mouse.get_pos()
+        #     selected_particle = findParticle(my_particles, mouseX, mouseY)
+        # elif event.type == pygame.MOUSEBUTTONUP:
+        #     selected_particle = None
 
-    if selected_particle:
-        (mouseX, mouseY) = pygame.mouse.get_pos()
-        dx = mouseX - selected_particle.x
-        dy = mouseY - selected_particle.y
-        selected_particle.angle = 0.5*math.pi + math.atan2(dy, dx)
-        selected_particle.speed = math.hypot(dx, dy) * 0.1
+    # if selected_particle:
+    #     (mouseX, mouseY) = pygame.mouse.get_pos()
+    #     dx = mouseX - selected_particle.x
+    #     dy = mouseY - selected_particle.y
+    #     selected_particle.angle = 0.5*math.pi + math.atan2(dy, dx)
+    #     selected_particle.speed = math.hypot(dx, dy) * 0.1
 
     screen.fill(background_colour)
 
     for i, particle in enumerate(my_particles):
         particle.move()
         particle.bounce()
+        for particle2 in my_particles[i+1:]:
+            collide(particle, particle2)
+        particle.display()
+
+    for i, particle in enumerate(my_particles_frozen):
         for particle2 in my_particles[i+1:]:
             collide(particle, particle2)
         particle.display()
