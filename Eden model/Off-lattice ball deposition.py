@@ -3,6 +3,14 @@ import random
 import math
 import time
 
+'''TODO: fix the particles_frozen mechanic such that it works correctly i.e. find a way to make it collide but not calculate any of the Newtonian mechanic things'''
+'''TODO: in roughness(), implement the roughness calculation for each row, and deleting the row afterwards.'''
+
+# Ask about viva tips - how to prepare the best? Structure of the presentation etc, time allocation for each section etc.
+# Ask about poster, are there any sample ones to look at
+# Ask about report: structure and how many words on each section etc. (and can we use lit review as basis without self-plagiarising?)
+# Are there any previous reports we can take a look at
+
 background_colour = (255, 255, 255)
 (width, height) = (800, 800)
 mass_of_air = 0
@@ -13,11 +21,16 @@ counter = 0
 off = 0
 
 my_particles_frozen = []
+particle_row = []
 
 elasticity = 0    # 0 means balls stick i.e. what percentage of speed is retained on bounce
 
 
 def addVectors((angle1, length1), (angle2, length2)):
+    '''
+    Mathematical function to add vectors together
+    :return:
+    '''
     x = math.sin(angle1) * length1 + math.sin(angle2) * length2
     y = math.cos(angle1) * length1 + math.cos(angle2) * length2
 
@@ -28,6 +41,13 @@ def addVectors((angle1, length1), (angle2, length2)):
 
 
 def findParticle(particles, x, y):
+    '''
+    Find particles of different sizes
+    :param particles:
+    :param x:
+    :param y:
+    :return:
+    '''
     for p in particles:
         if math.hypot(p.x-x, p.y-y) <= p.size:
             return p
@@ -35,6 +55,10 @@ def findParticle(particles, x, y):
 
 
 def newParticle():
+    '''
+    Picks random size, density, speed etc.
+    :return:
+    '''
     size = random.randint(10, 20)
     density = random.randint(1, 20)
     x = random.randint(size, width - size)
@@ -49,6 +73,10 @@ def newParticle():
 
 
 def newParticleRow():
+    '''
+    Instantiates a row of new particles which are the same size as the average size of the particles (so they theoretically fit nicely on top of the row)
+    :return:
+    '''
     size = 15
     density = 1
     y = 1
@@ -56,7 +84,7 @@ def newParticleRow():
 
     for x in range(width):
         dummy = dummy + 1
-        if dummy%30 == 0:
+        if dummy % 30 == 0:
             particle = Particle((x, y), size, density * size ** 2)
             particle.colour = (200 - density * 10, 200 - density * 10, 255)
             particle.speed = 0
@@ -65,7 +93,40 @@ def newParticleRow():
             my_particles.append(particle)
 
 
+def roughness(particleRow_array):
+    '''
+
+    :param particleRow_array:
+    :return:
+    '''
+
+    for i in particleRow_array:
+
+        fill_this_in_later = 1 + 1
+
+        # get the y coordinate out of each particle class as well as the time that this was instantiated
+        # append it to a list of y-coordinates
+        # perform the roughness calculation and calculate alpha for this timestep
+
+        # delete the whole particle row
+
+    for i in my_particles:
+        # Now freeze all the particles so they don't take up computational space
+        my_particles_frozen.append(i)
+        my_particles.remove(i)
+
+    '''TODO: roughness calculation using an array of particle IDs as input i.e. finish this function off'''
+
+    return
+
+
 def collide(p1, p2):
+    '''
+    Collision mechanics between two particles
+    :param p1:
+    :param p2:
+    :return:
+    '''
     dx = p1.x - p2.x
     dy = p1.y - p2.y
 
@@ -88,7 +149,10 @@ def collide(p1, p2):
         p2.y += math.cos(angle)
 
 
-class Particle():
+class Particle:
+    '''
+    Particle class
+    '''
     def __init__(self, (x, y), size, mass=1):
         self.x = x
         self.y = y
@@ -145,18 +209,21 @@ running = True
 while running:
 
     counter = counter + 1
-    off = off + 1
 
+    '''Every x timesteps a new particle falls'''
     # if counter % 10 == 0:
         # newParticle()
+
+    '''Every y timesteps measure the roughness by depositing a row of particles and calculating using their x, y positions. After they have fallen freeze all particles so it takes up less computing time'''
+
     if counter == 1000:
         newParticleRow()
-        off = 0
-        if counter == 1500:
-            for i in my_particles:
-                my_particles_frozen.append(i)
-                my_particles.remove(i)
-                counter = 0
+    if counter == 1500:
+        '''TODO: probably under here goes the calculating the roughness and the deleting the particle row'''
+        for i in my_particles:
+            my_particles_frozen.append(i)
+            my_particles.remove(i)
+            counter = 0
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -176,6 +243,8 @@ while running:
 
     screen.fill(background_colour)
 
+    '''Loop over all particles and calculate mechanics etc'''
+
     for i, particle in enumerate(my_particles):
         particle.move()
         particle.bounce()
@@ -184,7 +253,7 @@ while running:
         particle.display()
 
     for i, particle in enumerate(my_particles_frozen):
-        for particle2 in my_particles[i+1:]:
+        for particle2 in my_particles_frozen[i+1:]:
             collide(particle, particle2)
         particle.display()
 
