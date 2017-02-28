@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+import numpy as np
 import time
 
 '''TODO: fix the particles_frozen mechanic such that it works correctly i.e. find a way to make it collide but not calculate any of the Newtonian mechanic things'''
@@ -24,10 +25,11 @@ pause = 0
 
 global_time = 0
 
-my_particles_frozen = []
 particle_row = []
+my_particles_frozen = []
 
 results = []
+results_time = []
 
 elasticity = 0.2    # 0 means balls stick i.e. what percentage of speed is retained on bounce
 
@@ -110,21 +112,24 @@ def roughness(particleRow_array):
     :return:
     '''
 
-    coord_list = []
+    coord_list = np.array([])
 
     for i, particle in enumerate(particleRow_array):
 
-        coord_list.append(particle.y_coord())
+        coord_list = np.append(coord_list, particle.y_coord())
 
-        # perform the roughness calculation and calculate alpha for this timestep
+    y = np.average(coord_list)
+    a = (coord_list - y) ** 2
+    b = np.sum(a)
+    z = (1 / (float(len(coord_list)))) * b  # remember edge columns are kept empty so column does not
+    alpha = z ** 0.5
 
-        alpha = 1 + 1
+    results.append(alpha)
+    results_time.append(global_time)
 
-        results.append((alpha, global_time))
+    # delete all particles
 
-        # delete the whole particle row
-
-    '''TODO: roughness calculation using an array of particle IDs as input i.e. finish this function off'''
+    del particleRow_array[:]
 
     return
 
@@ -260,6 +265,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+            print results
+            print results_time
         # elif event.type == pygame.MOUSEBUTTONDOWN:
         #     (mouseX, mouseY) = pygame.mouse.get_pos()
         #     selected_particle = findParticle(my_particles, mouseX, mouseY)
@@ -278,9 +285,9 @@ while running:
     '''Loop over all particles and calculate mechanics etc'''
 
     for i, particle in enumerate(my_particles):
+        particle.bounce()
         if my_particles[i].particle_frozen == 0:
             particle.move()
-            particle.bounce()
         for particle2 in my_particles[i+1:]:
             collide(particle, particle2)
         particle.display()
