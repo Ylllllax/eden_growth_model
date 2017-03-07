@@ -250,6 +250,8 @@ class Particle:
 screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 pygame.display.set_caption('Eden deposition off-lattice')
 
+start = time.time()
+
 number_of_particles = 0
 my_particles = []
 
@@ -296,6 +298,8 @@ while running:
     if roughness_values == 100:
         print results
         print results_time
+        end = time.time()
+        print (end - start)
         pygame.QUIT()
 
     for event in pygame.event.get():
