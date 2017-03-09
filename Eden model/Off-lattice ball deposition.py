@@ -4,6 +4,8 @@ import math
 import numpy as np
 import time
 
+import sys
+
 '''TODO: fix the particles_frozen mechanic such that it works correctly i.e. find a way to make it collide but not calculate any of the Newtonian mechanic things'''
 '''TODO: in roughness(), implement the roughness calculation for each row, and deleting the row afterwards.'''
 
@@ -29,6 +31,8 @@ global_time = 0
 
 particle_row = []
 my_particles_frozen = []
+
+screenVar = 1  # 1 for on and 0 for off
 
 results = []
 results_time = []
@@ -162,26 +166,33 @@ def collide(p1, p2):
     :param p2:
     :return:
     '''
+
     dx = p1.x - p2.x
     dy = p1.y - p2.y
 
     dist = math.hypot(dx, dy)
     if dist < p1.size + p2.size:
-        tangent = math.atan2(dy, dx)
-        angle = 0.5 * math.pi + tangent
 
-        angle1 = 2 * tangent - p1.angle
-        angle2 = 2 * tangent - p2.angle
-        speed1 = p2.speed * elasticity
-        speed2 = p1.speed * elasticity
+        # if p1.isfrozen() or p2.isfrozen() == 1:
+        #     p1.freeze()
+        #     p2.freeze()
+        #
+        # else:
+            tangent = math.atan2(dy, dx)
+            angle = 0.5 * math.pi + tangent
 
-        (p1.angle, p1.speed) = (angle1, speed1)
-        (p2.angle, p2.speed) = (angle2, speed2)
+            angle1 = 2 * tangent - p1.angle
+            angle2 = 2 * tangent - p2.angle
+            speed1 = p2.speed * elasticity
+            speed2 = p1.speed * elasticity
 
-        p1.x += math.sin(angle)
-        p1.y -= math.cos(angle)
-        p2.x -= math.sin(angle)
-        p2.y += math.cos(angle)
+            (p1.angle, p1.speed) = (angle1, speed1)
+            (p2.angle, p2.speed) = (angle2, speed2)
+
+            p1.x += math.sin(angle)
+            p1.y -= math.cos(angle)
+            p2.x -= math.sin(angle)
+            p2.y += math.cos(angle)
 
 
 class Particle:
@@ -203,7 +214,12 @@ class Particle:
         #self.drag = (self.mass/(self.mass + mass_of_air)) ** self.size
 
     def display(self):
-        pygame.draw.circle(screen, self.colour, (int(self.x), int(self.y)), self.size, self.thickness)
+        if screenVar == 1:
+            pygame.draw.circle(screen, self.colour, (int(self.x), int(self.y)), self.size, self.thickness)
+        return
+
+    def isfrozen(self):
+        return self.particle_frozen
 
     def freeze(self):
         self.particle_frozen = 1
@@ -247,8 +263,9 @@ class Particle:
             self.angle = math.pi - self.angle
             self.speed *= elasticity
 
-screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
-pygame.display.set_caption('Eden deposition off-lattice')
+if screenVar == 1:
+    screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
+    pygame.display.set_caption('Eden deposition off-lattice')
 
 start = time.time()
 
@@ -295,23 +312,27 @@ while running:
 
         roughness(particle_row)
 
-    if roughness_values == 100:
+    if roughness_values == 10:
         print results
         print results_time
         end = time.time()
         print (end - start)
-        pygame.QUIT()
+
+        # quit
+        sys.exit("time to stop")
+
+        # pygame.QUIT()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
             print results
             print results_time
-        # elif event.type == pygame.VIDEORESIZE:
-        #     screen = pygame.display.set_mode(
-        #         event.dict['size'], pygame.RESIZABLE)
-        #     screen.blit(pygame.transform.scale(screen, event.dict['size']), (0, 0))
-        #     pygame.display.flip()
+        elif event.type == pygame.VIDEORESIZE:
+            screen = pygame.display.set_mode(
+                event.dict['size'], pygame.RESIZABLE)
+            screen.blit(pygame.transform.scale(screen, event.dict['size']), (0, 0))
+            pygame.display.flip()
 
         # elif event.type == pygame.VIDEORESIZE:
         #     CreateWindow(width, height + 100)
@@ -328,7 +349,8 @@ while running:
     #     selected_particle.angle = 0.5*math.pi + math.atan2(dy, dx)
     #     selected_particle.speed = math.hypot(dx, dy) * 0.1
 
-    screen.fill(background_colour)
+    if screenVar == 1:
+        screen.fill(background_colour)
 
     '''Loop over all particles and calculate mechanics etc'''
 
@@ -340,4 +362,5 @@ while running:
             collide(particle, particle2)
         particle.display()
 
-    pygame.display.flip()
+    if screenVar == 1:
+        pygame.display.flip()
