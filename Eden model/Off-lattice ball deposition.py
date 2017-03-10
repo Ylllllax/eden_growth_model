@@ -3,8 +3,9 @@ import random
 import math
 import numpy as np
 import time
-
 import sys
+
+from pyqtree import Index
 
 '''TODO: fix the particles_frozen mechanic such that it works correctly i.e. find a way to make it collide but not calculate any of the Newtonian mechanic things'''
 '''TODO: in roughness(), implement the roughness calculation for each row, and deleting the row afterwards.'''
@@ -15,22 +16,23 @@ import sys
 # Ask about poster, are there any sample ones to look at
 # Ask about report: structure and how many words on each section etc. (and can we use lit review as basis without self-plagiarising?)
 # Are there any previous reports we can take a look at
-
 background_colour = (255, 255, 255)
 width = 800
 height = 800
 mass_of_air = 0
 gravity = (math.pi, 0.01)
+screen_height_division = 800
 
 # just loop things
 counter = 0
 pause = 0
-roughness_values = 0
+layer = 0
 
 global_time = 0
 
 particle_row = []
 my_particles_frozen = []
+current_max_height = 800
 
 screenVar = 1  # 1 for on and 0 for off
 
@@ -38,7 +40,6 @@ results = []
 results_time = []
 
 elasticity = 0.2    # 0 means balls stick i.e. what percentage of speed is retained on bounce
-
 
 def addVectors((angle1, length1), (angle2, length2)):
     '''
@@ -85,7 +86,6 @@ def newParticle():
 
     my_particles.append(particle)
 
-
 def newParticleRow():
     '''
     Instantiates a row of new particles which are the same size as the average size of the particles (so they theoretically fit nicely on top of the row)
@@ -95,11 +95,12 @@ def newParticleRow():
     density = 1
     y = 1
     dummy = 0
+    global layer
 
     for x in range(width):
         dummy = dummy + 1
         if dummy % 30 == 0:
-            particle = Particle((x, y), size, density * size ** 2)
+            particle = Particle((x, y), size, density * size ** 2, cyan_layer=layer)
             # particle.colour = (200 - density * 10, 200 - density * 10, 255)
             particle.speed = 0
             particle.angle = 0
@@ -107,7 +108,6 @@ def newParticleRow():
             particle.colour = (0, 255, 255)
 
             my_particles.append(particle)
-
             particle_row.append(particle)
 
 
@@ -118,13 +118,12 @@ def roughness(particleRow_array):
     :return:
     '''
 
-    coord_list = np.array([])
-
     global height
 
-    for i, particle in enumerate(particleRow_array):
 
-        coord_list = np.append(coord_list, particle.y_coord())
+    coord_list = []
+    for i, particle in enumerate(particleRow_array):
+        coord_list.append(particle.y_coord())
 
     y = np.average(coord_list)
     a = (coord_list - y) ** 2
@@ -136,24 +135,6 @@ def roughness(particleRow_array):
     results_time.append(global_time)
 
     # delete all particles
-
-    '''Get max y coord and see if it is < height/2 (because height is inverted). If this is the case height = height + height/2'''
-
-    if np.max(coord_list) < height/2:
-        # global screen
-        # screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
-        # pygame.display.set_caption('Eden deposition off-lattice')
-        # global screen.blit(picture, (0, 0))
-        # pygame.display.update()
-
-        height = height + height/2
-
-        for i, particle in enumerate(my_particles):
-            particle.teleport()
-
-    # scale window
-
-
     del particleRow_array[:]
 
     return
@@ -172,7 +153,6 @@ def collide(p1, p2):
 
     dist = math.hypot(dx, dy)
     if dist < p1.size + p2.size:
-
         # if p1.isfrozen() or p2.isfrozen() == 1:
         #     p1.freeze()
         #     p2.freeze()
@@ -189,28 +169,31 @@ def collide(p1, p2):
             (p1.angle, p1.speed) = (angle1, speed1)
             (p2.angle, p2.speed) = (angle2, speed2)
 
-            p1.x += math.sin(angle)
-            p1.y -= math.cos(angle)
-            p2.x -= math.sin(angle)
-            p2.y += math.cos(angle)
+            if not p1.isfrozen():
+                p1.x += math.sin(angle)
+                p1.y -= math.cos(angle)
 
+            if not p2.isfrozen():
+                p2.x -= math.sin(angle)
+                p2.y += math.cos(angle)
 
 class Particle:
     '''
     Particle class
     '''
 
-    def __init__(self, (x, y), size, mass=1):
+    def __init__(self, (x, y), size, mass=1, cyan_layer=0):
         self.particle_frozen = 0  # 0 for off
 
         self.x = x
-        self.y = height/4
+        self.y = current_max_height - 300
         self.size = size
         self.colour = (102, 0, 255)    # a beautiful purple
         self.thickness = 0
         self.speed = 0
         self.angle = 0
         self.mass = mass
+        self.cyan_layer = cyan_layer
         #self.drag = (self.mass/(self.mass + mass_of_air)) ** self.size
 
     def display(self):
@@ -231,7 +214,7 @@ class Particle:
         return self.x
 
     def teleport(self):
-        self.y = self.y + height/2
+        self.y = self.y + screen_height_division
 
     def y_coord(self):
         return self.y
@@ -263,104 +246,146 @@ class Particle:
             self.angle = math.pi - self.angle
             self.speed *= elasticity
 
-if screenVar == 1:
-    screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
-    pygame.display.set_caption('Eden deposition off-lattice')
+    def bbox(self):
+        return (self.x - self.size, self.y - self.size, self.x + self.size, self.y + self.size)
 
-start = time.time()
+    def max_dist(self):
+        s = 20
+        return (self.x - s, self.y - s, self.x + s, self.y + s)
 
-number_of_particles = 0
-my_particles = []
+def test():
+    global global_time
+    global counter
+    global layer
+    global pause
+    global my_particles
+    global height
+    global screen
+    global current_max_height
 
-for n in range(number_of_particles):
-    newParticle()
+    if screenVar == 1:
+        screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
+        pygame.display.set_caption('Eden deposition off-lattice')
 
-selected_particle = None
-running = True
+    start = time.time()
 
+    number_of_particles = 0
+    my_particles = []
 
-# def CreateWindow(width, height):
-#     '''Updates height and width'''
-#     screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
-#     screen.fill(255, 255, 255)
-
-while running:
-
-    global_time = global_time + 1
-
-    counter = counter + 1
-
-    '''Every x timesteps a new particle falls'''
-    if counter % 50 == 0 and pause == 0:
+    for n in range(number_of_particles):
         newParticle()
 
-    '''Every y timesteps measure the roughness by depositing a row of particles and calculating using their x, y positions. After they have fallen freeze all particles so it takes up less computing time'''
+    selected_particle = None
+    running = True
 
-    if counter == 4000:
-        pause = 1
+    # def CreateWindow(width, height):
+    #     '''Updates height and width'''
+    #     screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
+    #     screen.fill(255, 255, 255)
 
-    if counter == 5000:
-        newParticleRow()
+    while running:
+        global_time = global_time + 1
 
-    if counter == 6000:
-        for i, particle in enumerate(my_particles):
-            particle.freeze()
-        counter = 0
-        pause = 0
-        roughness_values = roughness_values + 1
-        print roughness_values
+        counter = counter + 1
 
-        roughness(particle_row)
+        '''Every x timesteps a new particle falls'''
+        if counter % 25 == 0 and pause == 0:
+            newParticle()
 
-    if roughness_values == 10:
-        print results
-        print results_time
-        end = time.time()
-        print (end - start)
+        '''Every y timesteps measure the roughness by depositing a row of particles and calculating using their x, y positions. After they have fallen freeze all particles so it takes up less computing time'''
 
-        # quit
-        sys.exit("time to stop")
+        if counter == 2000:
+            pause = 1
 
-        # pygame.QUIT()
+        if counter == 2500:
+            layer = layer + 1
+            print layer
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+            newParticleRow()
+
+        if counter == 3000:
+            roughness(particle_row)
+            newParticleRow()
+
+        if counter == 3500:
+            for i, particle in enumerate(my_particles[:]):#
+                if particle.cyan_layer != layer:
+                    my_particles.remove(particle)
+                else:
+                    current_max_height = min(current_max_height, particle.y)
+                    particle.freeze()
+
+            if current_max_height < height / 2:
+                height = height + screen_height_division
+                current_max_height = height
+
+                for i, particle in enumerate(my_particles):
+                    particle.teleport()
+                    current_max_height = min(current_max_height, particle.y)
+
+            counter = 0
+            pause = 0
+
+        if layer == 10:
             print results
             print results_time
-        elif event.type == pygame.VIDEORESIZE:
-            screen = pygame.display.set_mode(
-                event.dict['size'], pygame.RESIZABLE)
-            screen.blit(pygame.transform.scale(screen, event.dict['size']), (0, 0))
+            end = time.time()
+            print (end - start)
+
+            # quit
+            sys.exit("time to stop")
+
+            # pygame.QUIT()
+
+        if screenVar == 1:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                    print results
+                    print results_time
+                elif event.type == pygame.VIDEORESIZE:
+                    screen = pygame.display.set_mode(
+                        event.dict['size'], pygame.RESIZABLE)
+                    screen.blit(pygame.transform.scale(screen, event.dict['size']), (0, 0))
+                    pygame.display.flip()
+
+            # elif event.type == pygame.VIDEORESIZE:
+            #     CreateWindow(width, height + 100)
+            # elif event.type == pygame.MOUSEBUTTONDOWN:
+            #     (mouseX, mouseY) = pygame.mouse.get_pos()
+            #     selected_particle = findParticle(my_particles, mouseX, mouseY)
+            # elif event.type == pygame.MOUSEBUTTONUP:
+            #     selected_particle = None
+
+        # if selected_particle:
+        #     (mouseX, mouseY) = pygame.mouse.get_pos()
+        #     dx = mouseX - selected_particle.x
+        #     dy = mouseY - selected_particle.y
+        #     selected_particle.angle = 0.5*math.pi + math.atan2(dy, dx)
+        #     selected_particle.speed = math.hypot(dx, dy) * 0.1
+
+        if screenVar == 1:
+            screen.fill(background_colour)
+
+        quadtree = Index(bbox=(0, 0, width, height))
+        for particle in my_particles:
+            quadtree.insert(particle, particle.bbox())
+
+        '''Loop over all particles and calculate mechanics etc'''
+        for i in xrange(len(my_particles)):
+            particle = my_particles[i]
+
+            particle.bounce()
+            if particle.particle_frozen == 0:
+                particle.move()
+
+            possible_collides = quadtree.intersect(particle.max_dist())
+            for particle2 in possible_collides:
+                if particle != particle2:
+                    collide(particle, particle2)
+            particle.display()
+
+        if screenVar == 1:
             pygame.display.flip()
 
-        # elif event.type == pygame.VIDEORESIZE:
-        #     CreateWindow(width, height + 100)
-        # elif event.type == pygame.MOUSEBUTTONDOWN:
-        #     (mouseX, mouseY) = pygame.mouse.get_pos()
-        #     selected_particle = findParticle(my_particles, mouseX, mouseY)
-        # elif event.type == pygame.MOUSEBUTTONUP:
-        #     selected_particle = None
-
-    # if selected_particle:
-    #     (mouseX, mouseY) = pygame.mouse.get_pos()
-    #     dx = mouseX - selected_particle.x
-    #     dy = mouseY - selected_particle.y
-    #     selected_particle.angle = 0.5*math.pi + math.atan2(dy, dx)
-    #     selected_particle.speed = math.hypot(dx, dy) * 0.1
-
-    if screenVar == 1:
-        screen.fill(background_colour)
-
-    '''Loop over all particles and calculate mechanics etc'''
-
-    for i, particle in enumerate(my_particles):
-        particle.bounce()
-        if my_particles[i].particle_frozen == 0:
-            particle.move()
-        for particle2 in my_particles[i+1:]:
-            collide(particle, particle2)
-        particle.display()
-
-    if screenVar == 1:
-        pygame.display.flip()
+test()
