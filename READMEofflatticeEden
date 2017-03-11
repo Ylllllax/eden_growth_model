@@ -1,0 +1,125 @@
+This README file explains how to operate code for the EdenOffLattice.py and DiscAnalysis.py files
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+EdenOffLattice.py contains following classes:
+- Disc
+- System
+- EdenADiscs
+- EdenCDiscs
+
+DISC
+
+Instantiating a Disc object generates an object with a defined radius and (x,y) position
+Other attributes include angles of the disc that are masked and a number tag
+
+SYSTEM
+
+Main feature is that it contains a list of all Disc objects that are instantiated from within a single System object
+Allows to keep track of all the Discs and there attributes during a simulation
+Discs on the surface are stored in a separate list
+Contains all the attributes common to the EdenADiscs and EdenCDiscs classes (i.e. EdenADiscs and EdenCDiscs inherit the
+common attributes - makes the code shorter)
+
+EDENADISCS and EDENCDISCS
+
+These are system objects with the extra attributes that distinguish the two models (i.e. the selection of the next
+surface site)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+OUTLINE OF ALGORITHM (with example)
+
+>>> a=EdenCDiscs()        #instantiates off lattice Eden C object
+
+>>> a.generate(10.,0.,0.)  #generates the seed of radius 10 at x=y=0 stored disc list required for code to work
+
+>>> a.propagate()        #adds one particle to the system -can repeat to deposit more particles or simply use..
+
+>>> a.deposit_particles(number_of_particles)
+
+Now how does propagate() work?
+Look at function to see outline of algorithm
+
+    def propagate(self):
+        """code to deposit one disc; only done after system class initiated and one 'seed' disc is generated"""
+
+        # select random point on surface, described by a surface disc number and some angle
+        i, random_angle = self.random_point()
+
+        # determine origin of disc to be added using the chosen surface point
+        next_disc_x, next_disc_y, next_disc_radius = self.determine_origin(i, random_angle, 10.)
+
+        # then obtain list of disc numbers that are neighbours (i.e. discs that are within 4*radius)
+        neighbours = self.identify_neighbours(next_disc_x, next_disc_y, next_disc_radius)
+
+        # obtain list of neighbours that are completely masked
+        masked_neighbours = self.masked_neighbours_vicinity(neighbours, next_disc_x, next_disc_y, next_disc_radius)
+
+        #generate next disc
+        self.generate_disc(next_disc_radius, next_disc_x, next_disc_y)
+
+        #access the attributes of the newly created disc - self.disc_number() returns the number of discs in the system
+        a = self.access_disc(self.disc_number())
+
+        #now cycling through the discs neighbouring the newly created one
+        for j in neighbours:
+
+            #accesses the neighbour
+            a.update_neighbours(j)
+
+            #determines the cross over points and the corresponding masking range
+            new_disc_masking_range, cross_over_points = self.determine_masking_angles(j, next_disc_x, next_disc_y, next_disc_radius, self.disc_number())
+
+            # appends this to target disc
+            a.add_masking_angles(self, new_disc_masking_range) #appending crossover points and masking range to newly added disc
+
+            # just for debugging purposes
+            a.add_crossover_points(cross_over_points)
+
+            # just for debugging purposes
+            a.append_uncompressed_ranges(new_disc_masking_range, j)
+
+        # now cycling through the completely masked neighbours (not in the surface list) if there are any
+        # doing the same thing as is done above with the neighbours that are not completely masked
+        if len(masked_neighbours) != 0:
+            for n in masked_neighbours:
+                new_disc_masking_range, cross_over_points = self.determine_masking_angles(n, next_disc_x, next_disc_y, next_disc_radius, self.disc_number())
+                a.add_masking_angles(self,new_disc_masking_range) # appending crossover points and masking range to newly added disc
+                a.add_crossover_points(cross_over_points)
+                a.append_uncompressed_ranges(new_disc_masking_range, n)
+                b = self.access_disc(n)
+                b.null_masking_range()#set masking ranges to []
+
+        #now need to go cycle through the neighbours again and adjust the masking ranges to take into account the newly
+        # added masking ranges
+        for k in neighbours:
+            b = self.access_disc(k)
+
+            #compress all the currently unmasked neighbour masking ranges
+            b.compress_masking_ranges(self)
+
+        #compress masking ranges of new disc
+        a.compress_masking_ranges(self)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+EdenOffLattice.py contains following classes:
+- DataAnalysis
+- IterationTracker
+
+DATAANALYSIS
+
+Used to propagate the System object and calculate the roughness at equal intervals on a log log and save it all to a txt file
+Uses the IterationTracker object to print out strings on the progress of an ongoing simulation
+
+Example Code:
+
+>>> a=EdenCDiscs()    #instantiate EdenCDiscs object
+
+>>> b=DataAnalysis()  #instantiate DataAnalysis object
+
+
+#propagating object a, depositing 2**6 particles, calculating the roughness, then depositing 2**7 particles and
+#calculating the roughness again.. repeat for 9 powers (from 2**6 to 2**15) and do the whole simulation 1 time
+>>> b.log_log__origin_partial(a, 6, 9, 1)
