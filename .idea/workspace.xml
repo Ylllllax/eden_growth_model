@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c86cbf6b-4a3a-4123-96ca-70a2123a3ae2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Eden model/Off-lattice ball deposition.py" afterPath="$PROJECT_DIR$/Eden model/Off-lattice ball deposition.py" />
     </list>
     <ignored path="MSci project git files.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,7 +25,7 @@
       <file leaf-file-name="BD8.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BD8.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3604">
+            <state relative-caret-position="17">
               <caret line="215" column="27" selection-start-line="215" selection-start-column="27" selection-end-line="215" selection-end-column="27" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -35,11 +34,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Off-lattice ball deposition.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Eden model/Off-lattice ball deposition.py">
+      <file leaf-file-name="Off-lattice_ball_deposition_system_size_50_16times_parallel.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Off-lattice_ball_deposition_system_size_50_16times_parallel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="174" column="0" selection-start-line="174" selection-start-column="0" selection-end-line="174" selection-end-column="0" />
+            <state relative-caret-position="301">
+              <caret line="373" column="21" selection-start-line="373" selection-start-column="21" selection-end-line="373" selection-end-column="21" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -123,6 +122,7 @@
         <option value="$PROJECT_DIR$/Eden model/PyParticles.py" />
         <option value="$PROJECT_DIR$/Eden model/Off-lattice ball deposition NO PYGAME.py" />
         <option value="$PROJECT_DIR$/Eden model/Off-lattice ball deposition.py" />
+        <option value="$PROJECT_DIR$/Off-lattice_ball_deposition_system_size_50_16times_parallel.py" />
       </list>
     </option>
   </component>
@@ -157,8 +157,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -177,22 +175,10 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MSci project git files" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MSci project git files" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Eden model" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -207,7 +193,7 @@
       <recent name="C:\Users\xuanc_000\Documents\Imperial College 2013 - 2017\Physics\Year 4\MSci\MSci project git files\New folder" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Off-lattice ball deposition">
+  <component name="RunManager" selected="Python.Off-lattice_ball_deposition_system_size_50_16times_parallel">
     <configuration default="false" name="Off-lattice ball deposition" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -221,23 +207,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="MSci project git files" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Eden model/Off-lattice ball deposition.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="DataAnalysis" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="MSci project git files" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DataAnalysis.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -289,6 +258,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="MSci project git files" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Eden model/Off-lattice ball deposition NO PYGAME.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Off-lattice_ball_deposition_system_size_50_16times_parallel" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="MSci project git files" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Off-lattice_ball_deposition_system_size_50_16times_parallel.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -429,18 +415,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.Off-lattice ball deposition" />
-      <item index="1" class="java.lang.String" itemvalue="Python.DataAnalysis" />
-      <item index="2" class="java.lang.String" itemvalue="Python.off-lattice test feb 2017" />
-      <item index="3" class="java.lang.String" itemvalue="Python.test" />
-      <item index="4" class="java.lang.String" itemvalue="Python.Off-lattice ball deposition NO PYGAME" />
+      <item index="1" class="java.lang.String" itemvalue="Python.off-lattice test feb 2017" />
+      <item index="2" class="java.lang.String" itemvalue="Python.test" />
+      <item index="3" class="java.lang.String" itemvalue="Python.Off-lattice ball deposition NO PYGAME" />
+      <item index="4" class="java.lang.String" itemvalue="Python.Off-lattice_ball_deposition_system_size_50_16times_parallel" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.Off-lattice ball deposition" />
-        <item index="1" class="java.lang.String" itemvalue="Python.Off-lattice ball deposition NO PYGAME" />
-        <item index="2" class="java.lang.String" itemvalue="Python.test" />
-        <item index="3" class="java.lang.String" itemvalue="Python.off-lattice test feb 2017" />
-        <item index="4" class="java.lang.String" itemvalue="Python.DataAnalysis" />
+        <item index="0" class="java.lang.String" itemvalue="Python.Off-lattice_ball_deposition_system_size_50_16times_parallel" />
+        <item index="1" class="java.lang.String" itemvalue="Python.Off-lattice ball deposition" />
+        <item index="2" class="java.lang.String" itemvalue="Python.Off-lattice ball deposition NO PYGAME" />
+        <item index="3" class="java.lang.String" itemvalue="Python.test" />
+        <item index="4" class="java.lang.String" itemvalue="Python.off-lattice test feb 2017" />
       </list>
     </recent_temporary>
   </component>
@@ -458,7 +444,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1696" height="1026" extended-state="6" />
+    <frame x="-8" y="-8" width="1696" height="1026" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15119047" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -496,14 +482,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/DataAnalysis.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/BD8.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3655">
@@ -518,9 +496,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -566,9 +541,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -614,9 +586,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -672,9 +641,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -874,16 +840,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BD8.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3604">
-          <caret line="215" column="27" selection-start-line="215" selection-start-column="27" selection-end-line="215" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Eden model/PyParticles.py" />
     <entry file="file://$PROJECT_DIR$/DataAnalysis.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -905,9 +861,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3893">
           <caret line="235" column="45" selection-start-line="235" selection-start-column="45" selection-end-line="235" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#36#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -923,8 +876,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Eden model/Off-lattice ball deposition.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="174" column="0" selection-start-line="174" selection-start-column="0" selection-end-line="174" selection-end-column="0" />
+        <state relative-caret-position="1159">
+          <caret line="195" column="0" selection-start-line="195" selection-start-column="0" selection-end-line="195" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BD8.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="215" column="27" selection-start-line="215" selection-start-column="27" selection-end-line="215" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Off-lattice_ball_deposition_system_size_50_16times_parallel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="373" column="21" selection-start-line="373" selection-start-column="21" selection-end-line="373" selection-end-column="21" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
