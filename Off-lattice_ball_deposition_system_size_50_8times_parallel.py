@@ -131,6 +131,7 @@ class All():
     counter = 0
     pause = 0
     layer = 0
+    layer_copy = 0
 
     global_time = 0
 
@@ -141,7 +142,7 @@ class All():
     my_particles_frozen = []
     current_max_height = 800
 
-    screenVar = 0  # 1 for on and 0 for off
+    screenVar = 1  # 1 for on and 0 for off
 
     results = []
     results_time = []
@@ -277,10 +278,15 @@ class All():
             '''Every y timesteps measure the roughness by depositing a row of particles and calculating using their x, y positions. After they have fallen freeze all particles so it takes up less computing time'''
 
             if self.counter == 2000:
+                if self.layer_copy > 0:
+                    self.counter = 0
+                    self.layer_copy = self.layer_copy - 1
+
                 self.pause = 1
 
             if self.counter == 2500:
                 self.layer = self.layer + 1
+                self.layer_copy = self.layer
                 print self.layer
 
                 self.newParticleRow()
@@ -375,7 +381,7 @@ if __name__ == '__main__':
     results_time_list = []
 
     p = Pool(8)
-    out = p.map(f, range(8))
+    out = p.map(f, range(2))
     for (results, results_time) in out:
         log_results = np.log(results)
         results_list.append(log_results)
